@@ -2,7 +2,7 @@
 #include <stdbool.h>
 
 #define BUFFER_LENGTH 10000
-#define EXAMPLE_ARRAY_LENGHT 1000000
+#define EXAMPLE_ARRAY_LENGHT 10
 #define INT_SIZE 32
 
 #define COUNT_INDEX 0
@@ -17,10 +17,24 @@ void ** root;
 
 int leafCount = 0;
 
+int ** sortedArrayValueIndexes;
+int indx = 0;
+
+void recurse(void ** currentNode, int digit) {
+    if(digit == 0) { //this is leaf
+        sortedArrayValueIndexes[indx] = (int *)currentNode[VALUE_INDEX];
+        indx++;
+        return;
+    }
+    
+    if (currentNode[0]) recurse(currentNode[0], digit-1);
+    if (currentNode[1]) recurse(currentNode[1], digit-1);  
+}
 
 int ** getSortedValueAddresses(){
-    int ** sortedArrayValueIndexes = (int **) malloc(leafCount * sizeof(int*));
+    sortedArrayValueIndexes = (int **) malloc(leafCount * sizeof(int*));
     // todo recursive binary tree search for all leaf
+    recurse(root, INT_SIZE);
     return sortedArrayValueIndexes;
 }
             
@@ -81,7 +95,16 @@ int main() {
    for (int i = 0; i < EXAMPLE_ARRAY_LENGHT; i++) exampleArray[i] = i;
    
    printf("Begin \n");
+   
    bitSort(exampleArray, EXAMPLE_ARRAY_LENGHT);
+   
+   int ** valueadresses = getSortedValueAddresses();
+
+   printf("leafCount : %d \n", leafCount);
+   
+   for(int i = 0; i < leafCount; i++)
+      printf("%d-", *(valueadresses[i]));
+   
    printf("End");
 }
 
