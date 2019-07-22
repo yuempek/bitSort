@@ -21,8 +21,6 @@ int ** root;
 int leafCount = 0;
 int nodeCount = 0;
 
-double duration_nextFreeIndex = 0;
-	
 
 int *** sortedArrayValueIndexes;
 int indx = 0;
@@ -181,9 +179,6 @@ void bitSort(int * array, int arraySize) {
 }
 
 
-//start = clock();
-//duration_nextFreeIndex += ((double) (clock() - start)) / CLOCKS_PER_SEC * 1000000;
-
 int main() {
     int *** leafAdresses;
 	int i, count;
@@ -213,7 +208,6 @@ int main() {
 	printf("nodeCount : %d\n", nodeCount);
 	printf("duration sort : %d us\n", duration1);
     printf("duration read : %d us\n", duration2);
-    printf("duration nextFreeIndex : %d us\n", (int)duration_nextFreeIndex);
    
   /*
   for(i = 0; i < leafCount; i++){
