@@ -78,8 +78,65 @@ the full size of binary tree:
 cnt  value  cnt  value  cnt  value  cnt  value  cnt  value  cnt  value  cnt  value  cnt  value 
   
 Example:
-if 
-array = {};
+We suppose that we have 3 bit length numbers.
+array = {7, 3, 2, 5, 0, 7, 3, 2};
+
+L : level
+              msb       lsb
+               L1   L2   L3
+7 = 111  -->    1    1    1
+3 = 011  -->    0    1    1
+2 = 010  -->    0    1    0
+5 = 101  -->    1    0    1
+0 = 000  -->    0    0    0
+7 = 111  -->    1    1    1
+3 = 011  -->    0    1    1
+2 = 010  -->    0    1    0
+
+firstly binary tree has only root node.
+                            ______________________x______________________                          
+                          0/                                             \1                        
+
+
+first number is added to binary tree using own bits from msb to lsb. 
+(number: 7)
+                            ______________________x______________________                          
+L1                        0/                                             \1                        
+                                                                __________x__________              
+L2                                                            0/                     \1            
+                                                                                  ____x____        
+L3                                                                                         \1      
+                                                                                           _x_     
+                                                                                         0/   \1   
+                                                                                         1     7 
+
+Then others sequently.
+(numbers: 3, 2, 5, 0)
+
+                        ______________________x______________________                          
+                      0/                                             \1                        
+            __________x__________                           __________x__________              
+          0/                     \1                       0/                     \1            
+      ____x____               ____x____               ____x____               ____x____        
+    0/         \1           0/         \1           0/         \1           0/         \1      
+   _x_                     _x_         _x_                     _x_                     _x_     
+ 0/   \1                 0/   \1     0/   \1                 0/   \1                 0/   \1   
+ 1     0*                1     2*    1     3*                1     5*                1     7 
+
+
+if a number is already in tree, its count is increased 1.
+(numbers: 7, 3, 2)
+                        ______________________x______________________                          
+                      0/                                             \1                        
+            __________x__________                           __________x__________              
+          0/                     \1                       0/                     \1            
+      ____x____               ____x____               ____x____               ____x____        
+    0/         \1           0/         \1           0/         \1           0/         \1      
+   _x_                     _x_         _x_                     _x_                     _x_     
+ 0/   \1                 0/   \1     0/   \1                 0/   \1                 0/   \1   
+ 1     0                2*     2    2*     3                 1     5                2*     7 
+
+When it is read recursively, can be get sorted array.
 
 */
 void bitSort(int * array, int arraySize) {
