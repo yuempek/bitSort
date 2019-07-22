@@ -1,6 +1,6 @@
 # BitSort
 
-Bit sort is a new sorting algorithm that uses binary tree to sort elements. Numbers are put in a binary tree. When reading they sorted already. Complexity is O(nk). k is bit size of the number. BitSort is not recursive algorithm when sorting the values. But reading the tree is recursive.
+Bit sort is a new sorting algorithm that uses binary tree to sort elements. Numbers are put in a binary tree. When reading they sorted already. Complexity is **O(nk)**. **k** is bit size of the number. BitSort is not recursive algorithm when sorting the values. But reading the tree is recursive.
 
 the full size of binary tree for 3bit values:
 
@@ -44,12 +44,13 @@ firstly binary tree has only root node.
 first number is added to binary tree using own bits from msb to lsb. 
 (adding number: 7)
 
+
                                 ______________________|______________________                          
-    L1                         0                                             1                         
+    L1  -------------------->  0                                             1                         
                                                                     __________\__________              
-    L2                                                             0                     1             
+    L2  -------------------------------------------------------->  0                     1             
                                                                                       ____\____        
-    L3                                                                                         1       
+    L3  ------------------------------------------------------------------------->   0         1       
                                                                                                _\_     
                                                                                               /   \    
                                                                                              1     7 
