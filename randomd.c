@@ -1,7 +1,12 @@
 #include <time.h>
 #include <stdlib.h>
+/*
+  Copyright © 2019 Yuempek
 
-double randomd()   /* uniform distribution, [0..1] */
+  free to use!
+*/
+
+double randomd()   /* uniform distribution [0..1] */
 {
   int i;
   unsigned long x = 0;
