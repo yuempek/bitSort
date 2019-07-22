@@ -141,37 +141,52 @@ void bitSort(int * array, int arraySize) {
 	int i, j;
 	int ** addr;
     clock_t start, end;
-  
+
+    //create a buffer. root node is first node in buffer. 
 	root = (int**) nextFreeIndex();
 
+    //for every array element
     for (i = 0; i < arraySize; i++) {
             
-        
+        // start at root
         int ** activeNode = root;
     
         register int value = array[i];
         register int bit;
 
+        //for every bit of value 
         for (j = INT_SIZE; j; j--){
-                
+            //from msb to lsb    
             bit = (0x80000000 & value) >> 31;
             value <<= 1;
             
+            // get the related node from bit 
             addr = (int **) activeNode[bit];
             
+            // if the node is not exists
             if (addr == 0) {
+                // get next blank node from the buffer.
                 addr = nextFreeIndex();
+
+                //connect new node to previous node  
                 activeNode[bit] = (int *) addr;
             }
 
+            // jump to new node.
             activeNode = (int **) addr;
         }
-        if (*activeNode == 0) {
+
+        // moved on every bits in tree 
+        if (*activeNode == 0) { 
+            // but there is no value specified address(if cnt index is 0(zero))
+            // set the value.
             activeNode[COUNT_INDEX] = 1;
             activeNode[VALUE_INDEX] = array + i;
-            leafCount++;
+            
+            leafCount++; // count the leafs
         }
         else{
+            // then if value set before, increase the count. 
             activeNode[COUNT_INDEX] = ((int)activeNode[COUNT_INDEX]) + 1;
         }     
              
@@ -185,37 +200,50 @@ int main() {
     int duration1, duration2;
 	clock_t start, end;
     double cpu_time_used;
-     
 
-    for (i = 0; i < EXAMPLE_ARRAY_LENGHT; i++) 
-        exampleArray[i] = randomd() * 0x7FFFFFFF;
-   
-    printf("Begin \n");
+
+    //set an example array 
+    printf("\n");
+    printf("\n");
+    printf("unsorted array(%d) : ", EXAMPLE_ARRAY_LENGHT); 
+    for (i = 0; i < EXAMPLE_ARRAY_LENGHT; i++) {
+        exampleArray[i] = randomd() * 50; //* 0x7FFFFFFF;
+        printf("%d ", exampleArray[i]);
+    }
+
+    printf("\n");
+    printf("\n");
+    printf("Sorting Begin \n");
    
     start = clock();
-	    bitSort(exampleArray, EXAMPLE_ARRAY_LENGHT);
+        //sorting 
+        bitSort(exampleArray, EXAMPLE_ARRAY_LENGHT);
 	end = clock();
     duration1 = ((double) (end - start)) / CLOCKS_PER_SEC * 1000000;
 
     start = clock();
-		leafAdresses = getSortedValueAddresses();
+		//reading fom tree 
+        leafAdresses = getSortedValueAddresses();
 	end = clock();
     duration2 = ((double) (end - start)) / CLOCKS_PER_SEC * 1000000;
-
-    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
 	printf("leafCount : %d\n", leafCount);
 	printf("nodeCount : %d\n", nodeCount);
 	printf("duration sort : %d us\n", duration1);
     printf("duration read : %d us\n", duration2);
    
-  /*
-  for(i = 0; i < leafCount; i++){
+    //print sorted array
+    printf("\n");
+    printf("\n");
+    printf("sorted array(%d) : ", EXAMPLE_ARRAY_LENGHT); 
+    for(i = 0; i < leafCount; i++){
 		count = (int) leafAdresses[i][COUNT_INDEX];
 		while(count--)
-			printf("%d-", *(leafAdresses[i][VALUE_INDEX]));
-	}
-  */
+			printf("%d ", *(leafAdresses[i][VALUE_INDEX]));
+    }
   
-  printf("End");
+  
+    printf("\n");
+    printf("\n");
+    printf("Done");
 }
