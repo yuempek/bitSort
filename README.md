@@ -1,4 +1,4 @@
-#BitSort
+# BitSort
 
 Bit sort is a new sorting algorithm that uses binary tree to sort elements. Numbers are put in a binary tree. When reading they sorted already. Complexity is O(nk). k is bit size of the number. BitSort is not recursive algorithm when sorting the values. But reading the tree is recursive.
 
@@ -19,7 +19,10 @@ We suppose that we have 3 bit length numbers.
 
     array = {7, 3, 2, 5, 0, 7, 3, 2, 7};
     
-    L : level
+    L   : level
+    msb : most significant bit
+    lsb : least significant bit
+    
                   msb       lsb
                    L1   L2   L3
     7 = 111  -->    1    1    1
