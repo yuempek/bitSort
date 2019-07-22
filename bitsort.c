@@ -19,6 +19,8 @@ int ** maxIdx = 0;
 int ** root;
 
 int leafCount = 0;
+int nodeCount = 0;
+
 
 int *** sortedArrayValueIndexes;
 int indx = 0;
@@ -47,8 +49,8 @@ int ** nextFreeIndex(){
         
         int ** newBuffer = (int **) malloc(BUFFER_LENGTH * sizeof(int*));
         int i;
-        for (i = 0; i < BUFFER_LENGTH; i++) 
-            newBuffer[i] = 0;
+        //for (i = 0; i < BUFFER_LENGTH; i++) 
+        //    newBuffer[i] = 0;
         
         freeIdx = newBuffer;
         maxIdx = newBuffer + BUFFER_LENGTH;
@@ -56,14 +58,19 @@ int ** nextFreeIndex(){
         freeIdx = freeIdx + 2;
     }
     
+    freeIdx[0] = 0;
+    freeIdx[1] = 0;
+    
+    nodeCount++;
+
     return freeIdx;
 } 
 
 void bitSort(int * array, int arraySize) {
-    int i, j;
-    int ** addr;
+	int i, j;
+	int ** addr;
 
-    root = (int**) nextFreeIndex();
+	root = (int**) nextFreeIndex();
 
     for (i = 0; i < arraySize; i++) {
         int ** activeNode = root;
@@ -99,10 +106,11 @@ void bitSort(int * array, int arraySize) {
 
 int main() {
   int *** leafAdresses;
-  int i, count;
-
-  clock_t start, end;
+	int i, count;
+  int duration1, duration2;
+	clock_t start, end;
   double cpu_time_used;
+     
 
   for (i = 0; i < EXAMPLE_ARRAY_LENGHT; i++) 
       exampleArray[i] = randomd() * 0x7FFFFFFF;
@@ -110,21 +118,28 @@ int main() {
   printf("Begin \n");
    
   start = clock();
-    bitSort(exampleArray, EXAMPLE_ARRAY_LENGHT);
-    leafAdresses = getSortedValueAddresses();
-  end = clock();
+	  bitSort(exampleArray, EXAMPLE_ARRAY_LENGHT);
+	end = clock();
+  duration1 = ((double) (end - start)) / CLOCKS_PER_SEC * 1000;
+
+  start = clock();
+		leafAdresses = getSortedValueAddresses();
+	end = clock();
+  duration2 = ((double) (end - start)) / CLOCKS_PER_SEC * 1000;
 
   cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
-  printf("leafCount : %d\n", leafCount);
-  printf("duration  : %d ms\n", (int)(cpu_time_used * 1000));
+	printf("leafCount : %d\n", leafCount);
+	printf("nodeCount : %d\n", nodeCount);
+	printf("duration sort : %d ms\n", duration1);
+  printf("duration read : %d ms\n", duration2);
    
   /*
   for(i = 0; i < leafCount; i++){
-        count = (int) leafAdresses[i][COUNT_INDEX];
-        while(count--)
-            printf("%d-", *(leafAdresses[i][VALUE_INDEX]));
-    }
+		count = (int) leafAdresses[i][COUNT_INDEX];
+		while(count--)
+			printf("%d-", *(leafAdresses[i][VALUE_INDEX]));
+	}
   */
   
   printf("End");
