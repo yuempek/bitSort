@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "randomd.h"
      
 
 #define BUFFER_LENGTH 1000000
@@ -59,10 +60,10 @@ int ** nextFreeIndex(){
 } 
 
 void bitSort(int * array, int arraySize) {
-	int i, j;
-	int ** addr;
+    int i, j;
+    int ** addr;
 
-	root = (int**) nextFreeIndex();
+    root = (int**) nextFreeIndex();
 
     for (i = 0; i < arraySize; i++) {
         int ** activeNode = root;
@@ -97,34 +98,34 @@ void bitSort(int * array, int arraySize) {
 }
 
 int main() {
-    int *** leafAdresses;
-	int i, count;
+  int *** leafAdresses;
+  int i, count;
 
-	clock_t start, end;
-    double cpu_time_used;
-     
-    
+  clock_t start, end;
+  double cpu_time_used;
 
-
-    for (i = 0; i < EXAMPLE_ARRAY_LENGHT; i++) exampleArray[i] = i;
+  for (i = 0; i < EXAMPLE_ARRAY_LENGHT; i++) 
+      exampleArray[i] = randomd() * 0x7FFFFFFF;
    
-    printf("Begin \n");
+  printf("Begin \n");
    
-    start = clock();
-	    bitSort(exampleArray, EXAMPLE_ARRAY_LENGHT);
-		leafAdresses = getSortedValueAddresses();
-	end = clock();
+  start = clock();
+    bitSort(exampleArray, EXAMPLE_ARRAY_LENGHT);
+    leafAdresses = getSortedValueAddresses();
+  end = clock();
 
-    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+  cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
 
-	printf("leafCount : %d\n", leafCount);
-	printf("duration  : %d ms\n", (int)(cpu_time_used * 1000));
+  printf("leafCount : %d\n", leafCount);
+  printf("duration  : %d ms\n", (int)(cpu_time_used * 1000));
    
-   /* for(i = 0; i < leafCount; i++){
-		count = (int) leafAdresses[i][COUNT_INDEX];
-		while(count--)
-			printf("%d-", *(leafAdresses[i][VALUE_INDEX]));
-	}*/
-    printf("End");
-	system("pause");
+  /*
+  for(i = 0; i < leafCount; i++){
+        count = (int) leafAdresses[i][COUNT_INDEX];
+        while(count--)
+            printf("%d-", *(leafAdresses[i][VALUE_INDEX]));
+    }
+  */
+  
+  printf("End");
 }
