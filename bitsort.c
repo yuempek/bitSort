@@ -54,6 +54,8 @@ double randomd()   /* uniform distribution [0..1] */
 typedef union Block Block;
 
 typedef union Block {
+    int cnt[2];
+
     struct {
         int cnt;
         int value;
@@ -62,13 +64,16 @@ typedef union Block {
     Block* node[2];
 } Block;
 
+typedef int ARRAY_ELEMENT_TYPE;
+
 #define OUTPUT
 #define EXAMPLE_ARRAY_LENGHT 100
 #define BUFFER_LENGTH EXAMPLE_ARRAY_LENGHT
-#define INT_SIZE 32
+#define ARRAY_ELEMENT_TYPE_SIZE sizeof(ARRAY_ELEMENT_TYPE)*8
+#define ARRAY_ELEMENT_TYPE_SIZE_1 ARRAY_ELEMENT_TYPE_SIZE-1
 
                 
-int exampleArray[EXAMPLE_ARRAY_LENGHT] = {0};
+ARRAY_ELEMENT_TYPE exampleArray[EXAMPLE_ARRAY_LENGHT] = {0};
 
 int freeIdxCnt = 0;
 
@@ -82,22 +87,34 @@ int mem = 0;
 Block** sortedValueBlockAddresses;
 int indx = 0;
 
-void recurse(Block* currentNode, char digit) {
-    if(digit == 0) { //this is leaf
-        sortedValueBlockAddresses[indx] = currentNode;
-        indx++;
-        return;
-    }
+void recurse(ARRAY_ELEMENT_TYPE * destArray, 
+             Block* currentNode, 
+             register char currentDigit, 
+             register ARRAY_ELEMENT_TYPE numberOfNode) {
+    int cnt, bit;
     
-    if (currentNode->node[0]) recurse(currentNode->node[0], digit-1);
-    if (currentNode->node[1]) recurse(currentNode->node[1], digit-1);  
+    if(currentDigit) { //if currentDigit>0, currentNode is node
+        if (currentNode->node[0]) recurse(destArray, currentNode->node[0], currentDigit-1, numberOfNode << 1);
+        if (currentNode->node[1]) recurse(destArray, currentNode->node[1], currentDigit-1, (numberOfNode << 1) | 1);
+    }else { //currentNode is leaf
+        for(bit = 0; bit < 2; bit++){ //for 0 and 1 branch 
+            cnt = (int)currentNode->cnt[bit]; //get counts
+            while(cnt--) destArray[indx++] = (numberOfNode << 1) | bit; //calculate the leaf value
+        }
+    }
 }
 
-Block** getSortedValueBlockAddresses(){
-    if(sortedValueBlockAddresses) free(sortedValueBlockAddresses);
-    sortedValueBlockAddresses = malloc(leafCount * sizeof(Block*));
-    recurse(root, INT_SIZE - 1);
-    return sortedValueBlockAddresses;
+void getSortedValues(ARRAY_ELEMENT_TYPE * arrayPtr, Block* root){
+    ARRAY_ELEMENT_TYPE* destArray       = arrayPtr;
+    Block*              currentNode     = root; 
+    char                currentDigit    = ARRAY_ELEMENT_TYPE_SIZE_1; 
+    ARRAY_ELEMENT_TYPE  numberOfNode = 0;
+    
+    //recurse(destArray, currentNode, currentDigit, numberOfNode);
+    // to support negative numbers write below instead of above
+    if (currentNode->node[1]) recurse(destArray, currentNode->node[1], currentDigit-1, (numberOfNode << 1) | 1);
+    if (currentNode->node[0]) recurse(destArray, currentNode->node[0], currentDigit-1, numberOfNode << 1);
+    
 }
 
 Block* initBlockBuffer(){
@@ -206,7 +223,7 @@ void bitSort(int * array, int arraySize) {
 
     //create a buffer. root node is first node in buffer. 
 	root = initBlockBuffer();
-    const unsigned long long digit = ((unsigned long long) 1) << (INT_SIZE - 1);
+    const unsigned long long digit = ((unsigned long long) 1) << (ARRAY_ELEMENT_TYPE_SIZE_1);
     //for every array element
     for (i = 0; i < arraySize; i++) {
             
@@ -219,9 +236,9 @@ void bitSort(int * array, int arraySize) {
         //printf("\n");
 
         //for every bit of value 
-        for (j = 0; j < INT_SIZE - 1; j++){
+        for (j = 0; j < ARRAY_ELEMENT_TYPE_SIZE_1; j++){
             //from msb to lsb    
-            bit = (digit & (value << j)) >> (INT_SIZE - 1);
+            bit = (digit & (value << j)) >> (ARRAY_ELEMENT_TYPE_SIZE_1);
 
             // get the related node from bit 
             block = activeBlock->node[bit];
@@ -240,20 +257,10 @@ void bitSort(int * array, int arraySize) {
             activeBlock = block;
         }
 
+        if(activeBlock->cnt[value & 1] == 0) leafCount++;  
         // moved on every bits in tree 
-        if (activeBlock->leaf.cnt == 0) { 
-            // but there is no value specified address(if cnt index is 0(zero))
-            // set the value.
-            activeBlock->leaf.cnt = 1;
-            activeBlock->leaf.value = array[i];
-            
-            leafCount++; // count the leafs
-        }
-        else{
-            // then if value set before, increase the count. 
-            activeBlock->leaf.cnt++;
-        }     
-             
+        activeBlock->cnt[value & 1]++;  
+        
     }
 }
 
@@ -265,18 +272,21 @@ int main() {
 	clock_t start, end;
     double cpu_time_used;
 
+    for (i = 0; i < EXAMPLE_ARRAY_LENGHT; i++) {
+        //exampleArray[i] = i;
+        exampleArray[i] = randomd() * 100 - 50;
+        //exampleArray[i] = randomd() * 0x7FFFFFFF - 0x3FFFFFFF;
+    }
 
     //set an example array 
     printf("\n");
     printf("\n");
-    printf("unsorted array(%d) : ", EXAMPLE_ARRAY_LENGHT); 
-    for (i = 0; i < EXAMPLE_ARRAY_LENGHT; i++) {
-        exampleArray[i] = randomd() * 50;//0x7FFFFFFF;
+    printf("unsorted array(%d) : \n", EXAMPLE_ARRAY_LENGHT); 
 #ifdef OUTPUT
+    for (i = 0; i < EXAMPLE_ARRAY_LENGHT; i++) {
        printf("%d\n", exampleArray[i]);
-#endif
     }
-
+#endif
 
     printf("\n");
     printf("\n");
@@ -285,32 +295,30 @@ int main() {
     start = clock();
         //sorting 
         bitSort(exampleArray, EXAMPLE_ARRAY_LENGHT);
-	  end = clock();
+	end = clock();
     duration1 = ((double) (end - start)) / CLOCKS_PER_SEC * 1000000;
 
     start = clock();
-		//reading fom tree 
-        leafAdresses = getSortedValueBlockAddresses();
+		//reading from tree 
+        getSortedValues(exampleArray, root);
 	end = clock();
     duration2 = ((double) (end - start)) / CLOCKS_PER_SEC * 1000000;
 
-	printf("leafCount : %d\n", leafCount);
-	printf("nodeCount : %d\n", nodeCount);
-	printf("memory : %d\n", mem);
-	printf("sizeof(Block) : %ld\n", sizeof(Block));
-	printf("duration sort : %d us\n", duration1);
-    printf("duration read : %d us\n", duration2);
+	printf("Leaf Count    : %d\n", leafCount);
+	printf("Block Count   : %d\n", nodeCount);
+	printf("Block Size    : %ld byte\n", sizeof(Block));
+	printf("Total Memory  : %d byte\n", mem);
+	printf("Duration Sort : %d us\n", duration1);
+    printf("Duration Read : %d us\n", duration2);
    
     //print sorted array
     printf("\n");
     printf("\n");
-    printf("sorted array(%d) : ", EXAMPLE_ARRAY_LENGHT); 
+    printf("sorted array(%d) : \n", EXAMPLE_ARRAY_LENGHT); 
 
 #ifdef OUTPUT
-    for(i = 0; i < leafCount; i++){
-		count = leafAdresses[i]->leaf.cnt;
-		while(count--)
-			printf("%d\n", leafAdresses[i]->leaf.value);
+    for (i = 0; i < EXAMPLE_ARRAY_LENGHT; i++) {
+       printf("%d\n", exampleArray[i]);
     }
 #endif
   
