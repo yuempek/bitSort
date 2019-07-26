@@ -273,9 +273,10 @@ int main() {
     double cpu_time_used;
 
     for (i = 0; i < EXAMPLE_ARRAY_LENGHT; i++) {
-        //exampleArray[i] = i;
-        exampleArray[i] = randomd() * 100 - 50;
-        //exampleArray[i] = randomd() * 0x7FFFFFFF - 0x3FFFFFFF;
+        exampleArray[i] = 0x7FFFFFFF; // same numbers
+        //exampleArray[i] = i; //increasing
+        //exampleArray[i] = randomd() * 100 - 50; // recurrent
+        //exampleArray[i] = randomd() * 0x7FFFFFFF - 0x3FFFFFFF; // uniform distributed
     }
 
     //set an example array 
