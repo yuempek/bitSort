@@ -95,12 +95,12 @@ Some samples for N uniform distributed 32 bit integers :
 | 100000            | 1450000        | 14.5     | -3.32        | 5        | 1           | -3.32                       |
 | 1000000           | 11178000       | 11.178   | -3.322       | 6        | 1           | -3.322                      |
 
-average((Delta C/N) / (delta logN)) = 3.3
+    average((Delta C/N) / (delta logN)) = -3.3
 
 every 10 times increase of N, C/N decreasing 3.3, so we can say :
 
-    C/N = 31 - 3.3*LOG10(C14)
-    C = N * (31 - 3.3*LOG10(C14))
+    C/N = 31 - 3.3*LOG10(N)
+    C = N * (31 - 3.3*LOG10(N))
     f_C(N) = C
 
 | N: element count | C: average node count | f_C(N): formula |
@@ -153,7 +153,7 @@ Increasing from 1 to 1000000
 Leaf Count    : 1000000
 Block Count   : 1000018
 Block Size    : 16 byte
-Total Memory  : 16000304 byte
+Total Memory  : 16000304 byte (16MB)
 Duration Sort : 218556 us (0.2s)
 Duration Read : 14321 us (0.01s)
 
@@ -163,11 +163,22 @@ Random uniform distribution
 Leaf Count    : 999768 (uniq numbers, >%0,02 repetition)
 Block Count   : 11181318
 Block Size    : 16 byte
-Total Memory  : 178913456 byte
+Total Memory  : 178913456 byte (179MB)
 Duration Sort : 1460578 us (1.4s)
 Duration Read : 666933 us (0.7s)
 
 
 # Order
-Order not effect the sorting
+Order **not** effects the sorting.
+
+
+# What can be do?
+## Change bitsize
+Before sorting, can be find the max element as bit. And bitsize of algorithm can be set to max bit size. If the values are small, it can be increase performance because of low tree depth.
+
+## Float/Double number sorting
+Before sorting, can be changed of position of bits from MSB to LSB. It will work. **Important thing of this algorithm is bit order must be MSB to LSB. Value is not important.** 
+
+## String sorting
+The hardest thing is. But it is posible. Fistly, strings can be sorting by length of string, after that same size strings can be sort byte by byte.
 
