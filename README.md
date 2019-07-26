@@ -113,6 +113,15 @@ every 10 times increase of N, C/N decreasing 3.3, so we can say :
 | 100000           | 1450000               | 1450000         |
 | 1000000          | 11178000              | 11200000        |
 
+When it will nears to limit of the integer, C/N nears to 2. Because, max N distinct element, fills the whole tree. And number of leaf is N, number of their parent N/2, then number of parent of parent N/4 and so on. 
+total number of node is:  
+    
+    total_node = N + N/2 + N/4 + ... + 1
+    total_node = N * (1 + 1/2 + 1/4 ... 1/N)
+    
+    N -> forever
+    total_node ~= N * 2
+
 
 ### D (Distribution of the numbers on tree)
 "Distribution" effects duration, because tree is growing if the numbers don't use the branchs already exists.
@@ -120,14 +129,45 @@ The **best case** is that whole array is same number because of that distributio
 The **worst case** is that whole array is different and N is perfectly distributed in integer space.
 
 
-### B : Bit size of the number
+### B (Bit size of the number)
 Bit size changes the size of "number space" and "depth of the tree(Level)". Therefore intersect of the branchs of numbers will be maximum. So distrubution is decreasing and node creation will be minimum. 
 
 ## Comparison
 if we create an array has 1000000(one million) integer number as:
 - Same number
 - Increasing from 1 to 1000000
-- Random distribution
+- Random uniform distribution
+
+Same number
+---------------------------------------
+Leaf Count    : 1
+Block Count   : 31
+Block Size    : 16 byte
+Total Memory  : 512 byte
+Duration Sort : 178721 us (0.02s)
+Duration Read : 4994 us (0.005s)
 
 
+Increasing from 1 to 1000000
+---------------------------------------
+Leaf Count    : 1000000
+Block Count   : 1000018
+Block Size    : 16 byte
+Total Memory  : 16000304 byte
+Duration Sort : 218556 us (0.2s)
+Duration Read : 14321 us (0.01s)
+
+
+Random uniform distribution
+---------------------------------------
+Leaf Count    : 999768 (uniq numbers, >%0,02 repetition)
+Block Count   : 11181318
+Block Size    : 16 byte
+Total Memory  : 178913456 byte
+Duration Sort : 1460578 us (1.4s)
+Duration Read : 666933 us (0.7s)
+
+
+# Order
+Order not effect the sorting
 
