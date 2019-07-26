@@ -119,7 +119,7 @@ total number of node is:
     total_node = N + N/2 + N/4 + ... + 1
     total_node = N * (1 + 1/2 + 1/4 ... 1/N)
     
-    N -> forever
+    N -> infinite
     total_node ~= N * 2
 
 
