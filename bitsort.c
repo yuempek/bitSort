@@ -67,10 +67,10 @@ typedef union Block {
 typedef int ARRAY_ELEMENT_TYPE;
 
 #define OUTPUT
-#define EXAMPLE_ARRAY_LENGHT 100
-#define BUFFER_LENGTH 2928 // = EXAMPLE_ARRAY_LENGHT*(31-3.3*LOG(EXAMPLE_ARRAY_LENGHT)) * 1.20
-#define ARRAY_ELEMENT_TYPE_SIZE sizeof(ARRAY_ELEMENT_TYPE)*8
-#define ARRAY_ELEMENT_TYPE_SIZE_1 ARRAY_ELEMENT_TYPE_SIZE-1
+#define EXAMPLE_ARRAY_LENGHT        100
+#define BUFFER_LENGTH               2928 // = EXAMPLE_ARRAY_LENGHT*(31-3.3*LOG(EXAMPLE_ARRAY_LENGHT)) * 1.20
+#define ARRAY_ELEMENT_TYPE_SIZE     (sizeof(ARRAY_ELEMENT_TYPE)*8)
+#define ARRAY_ELEMENT_TYPE_SIZE_1   (ARRAY_ELEMENT_TYPE_SIZE-1)
 
                 
 ARRAY_ELEMENT_TYPE exampleArray[EXAMPLE_ARRAY_LENGHT] = {0};
@@ -384,9 +384,9 @@ int main() {
     double cpu_time_used;
 
     for (i = 0; i < EXAMPLE_ARRAY_LENGHT; i++) {
-        exampleArray[i] = 0x7FFFFFFF; // same numbers
+        //exampleArray[i] = 0x7FFFFFFF; // same numbers
         //exampleArray[i] = i; //increasing
-        //exampleArray[i] = randomd() * 100 - 50; // recurrent
+        exampleArray[i] = randomd() * 100 - 50; // recurrent
         //exampleArray[i] = randomd() * 0x7FFFFFFF - 0x3FFFFFFF; // uniform distributed
     }
 
@@ -396,7 +396,7 @@ int main() {
     printf("unsorted array(%d) : \n", EXAMPLE_ARRAY_LENGHT); 
 #ifdef OUTPUT
     for (i = 0; i < EXAMPLE_ARRAY_LENGHT; i++) {
-       printf("%d\n", exampleArray[i]);
+       printf("(%d) ", exampleArray[i]);
     }
 #endif
 
@@ -430,7 +430,7 @@ int main() {
 
 #ifdef OUTPUT
     for (i = 0; i < EXAMPLE_ARRAY_LENGHT; i++) {
-       printf("%d\n", exampleArray[i]);
+       printf("(%d)", exampleArray[i]);
     }
 #endif
   
