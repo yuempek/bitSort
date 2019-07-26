@@ -75,7 +75,7 @@ When it is read recursively, can be get sorted array.
     sorted_array = [0, 2, 2, 3, 3, 5, 7, 7, 7]
     
 ## Analyse
----------------------------------------------------------------------------------------------------------
+
 Duration & Memory is directly related to:
 - N : Unique Element count
 - D : Distribution of the numbers on tree.
@@ -140,32 +140,35 @@ if we create an array has 1000000(one million) integer number as:
 
 Same number
 ---------------------------------------
-Leaf Count    : 1
-Block Count   : 31
-Block Size    : 16 byte
-Total Memory  : 512 byte
-Duration Sort : 178721 us (0.02s)
-Duration Read : 4994 us (0.005s)
+
+    Leaf Count    : 1
+    Block Count   : 31
+    Block Size    : 16 byte
+    Total Memory  : 512 byte
+    Duration Sort : 178721 us (0.02s)
+    Duration Read : 4994 us (0.005s)
 
 
 Increasing from 1 to 1000000
 ---------------------------------------
-Leaf Count    : 1000000
-Block Count   : 1000018
-Block Size    : 16 byte
-Total Memory  : 16000304 byte (16MB)
-Duration Sort : 218556 us (0.2s)
-Duration Read : 14321 us (0.01s)
+
+    Leaf Count    : 1000000
+    Block Count   : 1000018
+    Block Size    : 16 byte
+    Total Memory  : 16000304 byte (16MB)
+    Duration Sort : 218556 us (0.2s)
+    Duration Read : 14321 us (0.01s)
 
 
 Random uniform distribution
 ---------------------------------------
-Leaf Count    : 999768 (uniq numbers, >%0,02 repetition)
-Block Count   : 11181318
-Block Size    : 16 byte
-Total Memory  : 178913456 byte (179MB)
-Duration Sort : 1460578 us (1.4s)
-Duration Read : 666933 us (0.7s)
+
+    Leaf Count    : 999768 (uniq numbers, >%0,02 repetition)
+    Block Count   : 11181318
+    Block Size    : 16 byte
+    Total Memory  : 178913456 byte (179MB)
+    Duration Sort : 1460578 us (1.4s)
+    Duration Read : 666933 us (0.7s)
 
 
 # Order
