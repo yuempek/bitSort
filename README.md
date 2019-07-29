@@ -171,8 +171,52 @@ Random uniform distribution
     Duration Read : 666933 us (0.7s)
 
 
-# Order
+## Order
 Order **not** effects the sorting.
+
+## Negative Numbers
+If numbers have sign bit, just use root node as symetric*
+
+                            1*____________________|_____________________0*                          
+                           /                                             \                         
+                0_________/_________1                           0_________\_________1              
+               /                     \                         /                     \             
+          0___/___1               0___\___1               0___/___1               0___\___1        
+         /         \             /         \             /         \             /         \       
+       cnt         cnt         cnt         cnt         cnt         cnt         cnt         cnt     
+
+
+
+## Storing of the tree
+Block, is a node of bitsort tree. It can store counter or block pointer. So it must be "union". 
+
+    typedef union Block {
+       int cnt[2]; // cnt[0] cnt[1] -> cnt[bit]
+       Block* node[2]; //node[0] node[1] -> node[bit]
+    } Block;
+
+BlockBuffer is a block array predefined size. 
+
+             ---------------------------------------------------------------
+    buffer : | Block0 | Block1 | Block2 | Block3 | Block4 | Block5 | Block6 | 
+             ---------------------------------------------------------------
+
+It is extendable because of that a block can connect to another. If a Blockbuffer was full, another one can be created and connect to related block.   
+
+              --------------------------------------------------------------
+    buffer : | Block0 | Block1 | Block2 | Block3 | Block4 | Block5 | Block6 | 
+              --------------------------------------------------------------
+               _______________________________________^
+              V
+               ------------------------------------------------------------------
+    buffer2 : | Block7 | Block8 | Block9 | Block10 | Block11 | Block12 | Block13 | 
+               ------------------------------------------------------------------
+
+
+Block0 is "root" of the tree. So we are storing in a variable to reach.
+
+    root = initBlockBuffer();
+    
 
 
 # What can be do?
