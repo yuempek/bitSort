@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BitSort | Algorithm Specification</title>
+    <meta name="description" content="Technical specification and analysis of the BitSort algorithm.">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="tag">SPECIFICATION V1.0</div>
+            <h1>BITSORT_ALGO</h1>
+            <p class="version">BINARY TRIE-BASED SORTING SYSTEM</p>
+        </header>
+
+        <section id="abstract">
+            <h2>01. Abstract</h2>
+            <p>BitSort is a non-comparison based sorting algorithm. It utilizes a binary trie structure to organize elements bit by bit, resulting in a predictable time complexity relative to the bit-depth of the input data type.</p>
+            
+            <div class="technical-grid">
+                <div class="info-box">
+                    <h3>COMPLEXITY</h3>
+                    <p style="font-family: var(--mono); font-weight: 700;">O(N * K)</p>
+                    <p style="font-size: 0.875rem; color: var(--muted);">N: Total elements<br>K: Bit size (e.g., 32 for int)</p>
+                </div>
+                <div class="info-box">
+                    <h3>SPACE</h3>
+                    <p style="font-family: var(--mono); font-weight: 700;">DYNAMIC</p>
+                    <p style="font-size: 0.875rem; color: var(--muted);">Directly proportional to unique element distribution.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="mechanism">
+            <h2>02. Mechanism</h2>
+            <p>The algorithm decomposes each integer into its constituent bits, traversing from MSB to LSB. Each bit determines the path taken through a binary tree of 'Blocks'.</p>
+            
+            <div class="tree-ascii">
+[ROOT]
+  |
+  +-- [0] (Path for MSB=0)
+  |    |
+  |    +-- [0] ...
+  |    +-- [1] ...
+  |
+  +-- [1] (Path for MSB=1)
+       |
+       +-- [0] ...
+       +-- [1] (Leaf Node: Counter++)</div>
+        </section>
+
+        <section id="data-structure">
+            <h2>03. Data Structure</h2>
+            <p>The core structure uses a memory-efficient <code>union</code> to represent internal nodes and leaves.</p>
+            <pre><code>typedef union Block {
+    int cnt[2];      // Leaf: bit counters
+    Block* node[2];  // Internal: child pointers
+} Block;</code></pre>
+        </section>
+
+        <section id="analysis">
+            <h2>04. Performance Analysis</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>N (Count)</th>
+                        <th>Distribution</th>
+                        <th>Memory Usage</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1,000,000</td>
+                        <td>Same Value</td>
+                        <td>512 Bytes</td>
+                        <td>~0.02s</td>
+                    </tr>
+                    <tr>
+                        <td>1,000,000</td>
+                        <td>Sequential</td>
+                        <td>~16 MB</td>
+                        <td>~0.2s</td>
+                    </tr>
+                    <tr>
+                        <td>1,000,000</td>
+                        <td>Uniform Random</td>
+                        <td>~179 MB</td>
+                        <td>~1.4s</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="limitations">
+            <h2>05. Implementation Notes</h2>
+            <ul>
+                <li><strong>Memory:</strong> Worst-case memory occurs with maximum bit-level distribution.</li>
+                <li><strong>Recursion:</strong> Only used during the read (traversal) phase. Sorting is iterative.</li>
+                <li><strong>Extensions:</strong> Adaptable for signed integers, floats (via bit-reordering), and strings.</li>
+            </ul>
+        </section>
+
+        <footer>
+            <p>DOCUMENT GENERATED: 2026-05-05</p>
+            <p>REPOSITORY: <a href="https://github.com/yuempek/bitSort">github.com/yuempek/bitSort</a></p>
+        </footer>
+    </div>
+
+</body>
+</html>
