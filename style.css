@@ -123,6 +123,7 @@ pre {
     border: 1px solid var(--border);
     overflow-x: auto;
     line-height: 1.2;
+    text-align: center;
 }
 
 table {

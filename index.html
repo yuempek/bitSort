@@ -39,17 +39,13 @@
             <p>The algorithm decomposes each integer into its constituent bits, traversing from MSB to LSB. Each bit determines the path taken through a binary tree of 'Blocks'.</p>
             
             <div class="tree-ascii">
-[ROOT]
-  |
-  +-- [0] (Path for MSB=0)
-  |    |
-  |    +-- [0] ...
-  |    +-- [1] ...
-  |
-  +-- [1] (Path for MSB=1)
-       |
-       +-- [0] ...
-       +-- [1] (Leaf Node: Counter++)</div>
+                            0_____________________|_____________________1                          
+                           /                                             \                         
+                0_________/_________1                           0_________\_________1              
+               /                     \                         /                     \             
+          0___/___1               0___\___1               0___/___1               0___\___1        
+         /         \             /         \             /         \             /         \       
+       cnt         cnt         cnt         cnt         cnt         cnt         cnt         cnt</div>
         </section>
 
         <section id="data-structure">
